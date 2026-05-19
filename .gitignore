@@ -1,0 +1,30 @@
+# ==========================================
+# 🐍 Ambiente Virtual e Python
+# ==========================================
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# ==========================================
+# 📊 Dados e Resultados do Scraping
+# ==========================================
+# Impede que arquivos pesados de dados sejam enviados ao GitHub
+data/
+*.csv
+*.json
+*.xlsx
+*.xml
+*.log
+
+# ==========================================
+# 💻 Configurações do VS Code e Sistema
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
