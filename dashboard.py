@@ -134,7 +134,7 @@ hr.atlas {{ border: none; border-top: 1px solid #2a7a89; margin: 8px 0; }}
 
 # ── CARREGAR DADOS ────────────────────────────────────────────────────────────
 try:
-    with open("resultado_sebrae_local.json", "r", encoding="utf-8") as f:
+    with open("src/JSON/resultado_sebrae_local.json", "r", encoding="utf-8") as f:
         dados = json.load(f)
 except FileNotFoundError:
     st.error("arquivo 'resultado_sebrae_local.json' não encontrado. execute main.py primeiro.")

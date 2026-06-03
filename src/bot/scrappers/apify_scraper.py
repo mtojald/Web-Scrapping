@@ -17,14 +17,15 @@ def coletar_apify(query: str, limite: int = 30) -> list[dict]:
         f"{base}/acts/{ACTOR_ID}/runs",
         params={"token": token},
         json={
-    "queries": query,
-    "maxPagesPerQuery": 1,
-    "resultsPerPage": min(limite, 10),
-    "languageCode": "pt",
-    "countryCode": "br",
-},
+            "queries": query,
+            "maxPagesPerQuery": 1,
+            "resultsPerPage": min(limite, 10),
+            "languageCode": "pt",
+            "countryCode": "br",
+        },
         timeout=30,
     )
+    
     run_resp.raise_for_status()
     run_id = run_resp.json()["data"]["id"]
     print(f"[Apify] Run iniciado: {run_id}. Aguardando conclusão...")
