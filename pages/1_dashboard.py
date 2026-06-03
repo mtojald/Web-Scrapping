@@ -107,6 +107,61 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
+# ── CARREGAR DADOS ────────────────────────────────────────────────────────────
+try:
+    with open("src/JSON/reqPlataformas.json", "r", encoding="utf-8") as f:
+        dados = json.load(f)
+except FileNotFoundError:
+    st.error("arquivo 'reqPlataformas.json' não encontrado. execute main.py primeiro.")
+    st.stop()
+
+df = pd.DataFrame(dados)
+
+# ── NOTA / SENTIMENTO ─────────────────────────────────────────────────────────
+def extrair_nota(av):
+    m = re.search(r"(\d+(?:[.,]\d+)?)", str(av))
+    if not m:
+        return None
+    val = float(m.group(1).replace(",", "."))
+    return round(val) if val <= 5 else None
+
+def sentimento(n):
+    if n is None: return "Sem nota"
+    if n >= 4:    return "Positivo"
+    if n == 3:    return "Neutro"
+    return "Negativo"
+
+df["nota"]      = df["avaliacao"].apply(extrair_nota)
+df["sentimento"] = df["nota"].apply(sentimento)
+
+# ── SIDEBAR ───────────────────────────────────────────────────────────────────
+with st.sidebar:
+    st.markdown("""
+    <div style="display:flex;align-items:center;gap:10px;background:#174a52;border:1px solid #2a8aa3;border-radius:8px;padding:10px;margin-bottom:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f1c27d,#d99a5b);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">👤</div>
+        <div>
+            <div style="font-size:13px;font-weight:600;color:#eaf6f5">Atlas Insights</div>
+            <span class="user-tag">ATLAS</span>
+        </div>
+    </div>
+    <hr class="atlas"/>
+    """, unsafe_allow_html=True)
+
+    fontes = sorted(df["fonte"].unique()) if "fonte" in df.columns else []
+    filtro_fonte = st.multiselect("Fonte", options=fontes, default=fontes)
+
+    sentimentos_disponiveis = list(df["sentimento"].unique())
+    filtro_sentimento = st.multiselect("Sentimento", options=sentimentos_disponiveis, default=sentimentos_disponiveis)
+
+    st.markdown("<hr class='atlas'/>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="font-size:11.5px;line-height:1.8;color:#b8d6d4">
+        <div><span style="color:#b8d6d4">Publicações</span> — {len(df)}</div>
+        <div><span style="color:#b8d6d4">Fontes</span> — {df['fonte'].nunique() if 'fonte' in df.columns else 1}</div>
+        <div><span style="color:#b8d6d4">Busca</span> — SEBRAE</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 # ── FILTRAR ───────────────────────────────────────────────────────────────────
 df_f = df[df["sentimento"].isin(filtro_sentimento)] if filtro_sentimento else df.copy()
 if filtro_fonte:

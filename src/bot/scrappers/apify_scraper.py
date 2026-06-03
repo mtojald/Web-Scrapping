@@ -3,9 +3,9 @@ import requests
 import time
 
 ACTOR_ID = "apify~google-search-scraper"
+APIFY_QUERY = "SEBRAE"
 
-
-def coletar_apify(query: str, limite: int = 30) -> list[dict]:
+def coletar_apify(limite: int = 30) -> list[dict]:
     """
     Aciona o Google Search Scraper do Apify.
     Requer: APIFY_API_TOKEN
@@ -17,11 +17,11 @@ def coletar_apify(query: str, limite: int = 30) -> list[dict]:
         f"{base}/acts/{ACTOR_ID}/runs",
         params={"token": token},
         json={
-            "queries": query,
-            "maxPagesPerQuery": 1,
-            "resultsPerPage": min(limite, 10),
-            "languageCode": "pt",
-            "countryCode": "br",
+                "queries": APIFY_QUERY,
+                "maxPagesPerQuery": 1,
+                "resultsPerPage": min(limite, 10),
+                "languageCode": "pt-BR",
+                "countryCode": "br"
         },
         timeout=30,
     )
@@ -60,7 +60,7 @@ def coletar_apify(query: str, limite: int = 30) -> list[dict]:
         for r in item.get("organicResults", [item]):
             resultados.append({
                 "fonte": "Apify",
-                "alvo_coleta": query,
+                "alvo_coleta": APIFY_QUERY,
                 "titulo_feedback": r.get("title") or "",
                 "comentario_usuario": r.get("description") or r.get("snippet") or "",
                 "avaliacao": f"Posição: {r.get('position') or 'N/A'}",

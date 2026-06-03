@@ -14,7 +14,7 @@ def coletar_noticias(query: str, limite: int = 50) -> list[dict]:
         "language": "pt",
         "sortBy": "publishedAt",
         "pageSize": min(limite, 100),
-        "apiKey": os.environ["NEWS_API_KEY"],
+        "apiKey": os.environ["NEWS_API_TOKEN"],
     }
 
     resp = requests.get(url, params=params, timeout=10)

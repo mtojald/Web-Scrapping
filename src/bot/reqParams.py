@@ -8,7 +8,7 @@ load_dotenv()
 # Palavra-chave central de busca
 QUERY = os.getenv("SEARCH_QUERY", "SEBRAE")
 DIR_RAIZ=  Path.cwd()
-RESULTADO_PATH = DIR_RAIZ / "src/JSON/resultado_sebrae_local.json"
+RESULTADO_PATH = DIR_RAIZ / "src/JSON/reqPlataformas.json"
 
 # Controle de quais fontes ativar (False = pula se a key não estiver configurada)
 FONTES = {
