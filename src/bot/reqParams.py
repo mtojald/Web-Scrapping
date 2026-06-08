@@ -2,15 +2,16 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-# Carrega variáveis do .env (se existir)
 load_dotenv()
 
-# Palavra-chave central de busca
 QUERY = os.getenv("SEARCH_QUERY", "SEBRAE")
-DIR_RAIZ=  Path.cwd()
-RESULTADO_PATH = DIR_RAIZ / "src/JSON/reqPlataformas.json"
+DIR_RAIZ = Path.cwd()
 
-# Controle de quais fontes ativar (False = pula se a key não estiver configurada)
+# Garante que o diretório existe
+(DIR_RAIZ / "src/JSON").mkdir(parents=True, exist_ok=True)
+
+RESULTADO_PATH = DIR_RAIZ / "src/JSON/resultado_sebrae_local.json"
+
 FONTES = {
     "reddit":  all(os.getenv(k) for k in ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET"]),
     "news":    bool(os.getenv("NEWS_API_KEY")),
