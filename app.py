@@ -11,16 +11,8 @@ st.set_page_config(
 @st.cache_data(show_spinner="Coletando dados...")
 def rodar_scraping():
     bot = scrapBot()
-    bot.rodar_scraping()
-
-rodar_scraping()
-
-pg = st.navigation(
-    [
-        st.Page("pages/1_dashboard.py",   title="Dashboard",   icon="📊"),
-        st.Page("pages/2_publicacoes.py", title="Publicações", icon="📋"),
-        st.Page("pages/3_resumo.py",      title="Resumo",      icon="📝"),
-    ],
-    position="hidden",
-)
-pg.run()
+    dados = bot.scrappersEmSeq()
+    import json
+    from src.bot.reqParams import RESULTADO_PATH
+    with open(RESULTADO_PATH, "w", encoding="utf-8") as f:
+        json.dump(dados, f, indent=4, ensure_ascii=False)
