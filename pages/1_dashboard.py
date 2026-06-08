@@ -13,12 +13,15 @@ import pages.sidebar as sidebar
 CORES = sidebar.CORES
 
 # ── CARREGAR DADOS ────────────────────────────────────────────────────────────
-try:
-with open("src/JSON/resultado_sebrae_local.json", "r", encoding="utf-8") as f:
+if "dados_scraping" in st.session_state:
+    dados = st.session_state["dados_scraping"]
+else:
+    try:
+        with open("src/JSON/resultado_sebrae_local.json", "r", encoding="utf-8") as f:
             dados = json.load(f)
-except FileNotFoundError:
-    st.error("arquivo 'resultado_sebrae_local.json' não encontrado. execute main.py primeiro.")
-    st.stop()
+    except FileNotFoundError:
+        st.error("arquivo não encontrado. execute main.py primeiro.")
+        st.stop()
 
 df = pd.DataFrame(dados)
 
