@@ -12,11 +12,15 @@ st.set_page_config(
 
 if "dados_carregados" not in st.session_state:
     with st.spinner("Coletando dados..."):
-        bot = scrapBot()
-        dados = bot.scrappersEmSeq()
-        with open(RESULTADO_PATH, "w", encoding="utf-8") as f:
-            json.dump(dados, f, indent=4, ensure_ascii=False)
-        st.session_state["dados_carregados"] = True
+        try:
+            bot = scrapBot()
+            dados = bot.scrappersEmSeq()
+            with open(RESULTADO_PATH, "w", encoding="utf-8") as f:
+                json.dump(dados, f, indent=4, ensure_ascii=False)
+            st.session_state["dados_carregados"] = True
+        except Exception as e:
+            st.error(f"Erro no scraping: {e}")
+            st.stop()
 
 pg = st.navigation(
     [
