@@ -28,7 +28,7 @@ class scrapBot():
                 case _:
                     print("\nNenhuma fonte ativa. Configure as variáveis no arquivo .env")
 
-        with open(RESULTADO_PATH, "w", encoding="utf-8") as f:
+        with open(RESULTADO_PATH, "a", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
 
         print(f"\n✅ {len(dados)} itens salvos em '{RESULTADO_PATH}'")
