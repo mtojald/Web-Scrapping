@@ -70,3 +70,29 @@ def coletar_apify(limite: int = 30) -> list[dict]:
 
     print(f"[Apify] {len(resultados)} itens coletados.")
     return resultados
+
+def coletar_apifyRECLAMEAQ(limite: int = 30) -> list[dict]:
+    """
+    Aciona o Reclame Aqui Scraper - Consumer Complaints BR do Apify.
+    Requer: APIFY_API_TOKEN
+    """
+    
+    token = os.environ["APIFY_API_TOKEN"]
+    base = "https://api.apify.com/v2"
+
+    run_resp = requests.post(
+        f"{base}/acts/{ACTOR_ID}/runs",
+        params={"token": token},
+        json={
+                "queries": APIFY_QUERY,
+                "maxPagesPerQuery": 1,
+                "resultsPerPage": min(limite, 10),
+                "languageCode": "pt-BR",
+                "countryCode": "br"
+        },
+        timeout=30,
+    )
+    
+    run_resp.raise_for_status()
+    run_id = run_resp.json()["data"]["id"]
+    print(f"[Apify] Run iniciado: {run_id}. Aguardando conclusão...")

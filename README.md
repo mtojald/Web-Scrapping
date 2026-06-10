@@ -34,6 +34,48 @@ Siga os passos abaixo para rodar o projeto localmente:
    git clone https://github.com/mtojald/Web-Scrapping.git
    cd seu-repositorio
    ```
+2. **Instale dependências:**
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
+3. **Configure variáveis de ambiente:**
+   Crie um arquivo `.env` com as chaves necessárias, por exemplo:
+   ```ini
+   NEWS_API_KEY=seu_news_api_key
+   YOUTUBE_API_KEY=seu_youtube_api_key
+   APIFY_API_TOKEN=seu_apify_api_token
+   REDDIT_CLIENT_ID=seu_reddit_client_id
+   REDDIT_CLIENT_SECRET=seu_reddit_client_secret
+   ```
+
+## ▶️ Como rodar o scraper (`main.py`)
+
+O arquivo `main.py` inicia a classe `scrapBot` em `src/bot/bot.py`.
+
+- `python main.py all`
+  - executa a sequência de scrapers `reddit`, `news` e `youtube`.
+- `python main.py plataforma1 plataforma2 (Ex: python main.py news youtube)`
+  - executa apenas os scrapers passados
+
+
+### Como `sys.argv` é usado
+
+A classe `scrapBot` recebe `sys.argv` no construtor e verifica cada argumento passado na linha de comando:
+
+Os resultados são gravados em `src/JSON/reqPlataformas.json`.
+
+## ▶️ Como rodar a interface Streamlit
+
+Para abrir o dashboard, execute o comando abaixo a partir da raiz do projeto:
+
+```bash
+streamlit run app.py
+```
+
+Isso carrega a aplicação com as páginas:
+- `pages/1_dashboard.py`
+- `pages/2_publicacoes.py`
+- `pages/3_resumo.py`
 
 ## 🧩 Parâmetros de requisição por scraper
 

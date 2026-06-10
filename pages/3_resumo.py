@@ -14,7 +14,7 @@ CORES = sidebar.CORES
 
 # ── CARREGAR DADOS ────────────────────────────────────────────────────────────
 try:
-    with open("src/JSON/resultado_sebrae_local.json", "r", encoding="utf-8") as f:
+    with open("src/JSON/reqPlataformas.json", "r", encoding="utf-8") as f:
         dados = json.load(f)
 except FileNotFoundError:
     st.error("Arquivo não encontrado. Execute main.py primeiro.")
