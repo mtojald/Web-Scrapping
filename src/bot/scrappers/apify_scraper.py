@@ -3,6 +3,7 @@ import requests
 import time
 
 ACTOR_ID = "apify~google-search-scraper"
+ACTOR_ID_RECLAMEAQUI= "NBbFLTa9dAVtyOdt5"
 APIFY_QUERY = "SEBRAE"
 
 def coletar_apify(limite: int = 30) -> list[dict]:
@@ -71,7 +72,7 @@ def coletar_apify(limite: int = 30) -> list[dict]:
     print(f"[Apify] {len(resultados)} itens coletados.")
     return resultados
 
-def coletar_apifyRECLAMEAQ(limite: int = 30) -> list[dict]:
+def coletar_apiRECLAMEAQ(limite: int = 30) -> list[dict]:
     """
     Aciona o Reclame Aqui Scraper - Consumer Complaints BR do Apify.
     Requer: APIFY_API_TOKEN
@@ -81,14 +82,21 @@ def coletar_apifyRECLAMEAQ(limite: int = 30) -> list[dict]:
     base = "https://api.apify.com/v2"
 
     run_resp = requests.post(
-        f"{base}/acts/{ACTOR_ID}/runs",
+        f"{base}/acts/{ACTOR_ID_RECLAMEAQUI}/runs",
         params={"token": token},
         json={
-                "queries": APIFY_QUERY,
-                "maxPagesPerQuery": 1,
-                "resultsPerPage": min(limite, 10),
-                "languageCode": "pt-BR",
-                "countryCode": "br"
+            {
+                "companies": [
+                    "sebrae"
+                ],
+                "includeCompanyStats":True,
+                "maxComplaints": 20,
+                "proxyConfiguration": {
+                    "useApifyProxy": True,
+                    "apifyProxyGroups": []
+                },
+                "statusFilter": "all"
+            }
         },
         timeout=30,
     )
@@ -96,3 +104,32 @@ def coletar_apifyRECLAMEAQ(limite: int = 30) -> list[dict]:
     run_resp.raise_for_status()
     run_id = run_resp.json()["data"]["id"]
     print(f"[Apify] Run iniciado: {run_id}. Aguardando conclusão...")
+    
+    for _ in range(18):
+        time.sleep(10)
+        status_resp = requests.get(
+            f"{base}/actor-runs/{run_id}",
+            params={"token": token},
+            timeout=10,
+        )
+        status = status_resp.json()["data"]["status"]
+        if status == "SUCCEEDED":
+            break
+        if status in ("FAILED", "ABORTED", "TIMED-OUT"):
+            raise RuntimeError(f"[Apify] Run falhou com status: {status}")
+    else:
+        raise TimeoutError("[Apify] Run demorou mais de 3 minutos.")
+    
+    
+    dataset_id = status_resp.json()["data"]["defaultDatasetId"]
+    items_resp = requests.get(
+        f"{base}/datasets/{dataset_id}/items",
+        params={"token": token, "limit": limite},
+        timeout=30,
+    )
+    items_resp.raise_for_status()
+    items = dict(items_resp.json())
+    
+    return items
+    
+    

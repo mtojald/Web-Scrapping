@@ -24,7 +24,7 @@ class scrapBot():
                     dados += coletar_youtube(QUERY, limite=30)
                 case "apify":
                     pass
-                    #dados += coletar_apify(QUERY, limite=30)
+                    dados += coletar_apify(QUERY, limite=30)
                 case _:
                     print("\nNenhuma fonte ativa. Configure as variáveis no arquivo .env")
 
@@ -36,7 +36,7 @@ class scrapBot():
     def scrappersEmSeq(self):
             dadosAcc = []
         
-            dadosAcc += coletar_reddit(QUERY, limite=50)
+            #dadosAcc += coletar_reddit(QUERY, limite=50)
             dadosAcc += coletar_noticias(QUERY, limite=50)
             dadosAcc += coletar_youtube(QUERY, limite=30)
             #dadosAcc += coletar_apify(QUERY, limite=30)
