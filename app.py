@@ -1,6 +1,8 @@
-import streamlit as st
 import json
-from src.bot.bot import scrapBot
+
+import streamlit as st
+
+from src.bot.bot import ScrapBot
 from src.bot.reqParams import RESULTADO_PATH
 
 st.set_page_config(
@@ -13,10 +15,11 @@ st.set_page_config(
 if "dados_carregados" not in st.session_state:
     with st.spinner("Coletando dados..."):
         try:
-            bot = scrapBot()
-            dados = bot.scrappersEmSeq()
+            bot = ScrapBot()
+            colecao = bot.coletar_tudo()
             with open(RESULTADO_PATH, "w", encoding="utf-8") as f:
-                json.dump(dados, f, indent=4, ensure_ascii=False)
+                json.dump(colecao.como_lista_dicts(), f, indent=4, ensure_ascii=False)
+            st.session_state["dados_scraping"] = colecao.como_lista_dicts()
             st.session_state["dados_carregados"] = True
         except Exception as e:
             st.error(f"Erro no scraping: {e}")
